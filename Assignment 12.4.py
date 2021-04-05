@@ -1,21 +1,18 @@
-from urllib.request import urlopen
+import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
-import ssl
+import re
 
-# Ignore SSL certificate errors
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+url = 'http://py4e-data.dr-chuck.net/comments_1144953.html'
+html = urllib.request.urlopen(url)
+soup = BeautifulSoup(html, 'html.parser')
 
-url = input('Enter - ')
-html = urlopen(url, context=ctx).read()
-soup = BeautifulSoup(html, "html.parser")
 
-# Retrieve all of the anchor tags
-tags = soup('a')
+tags = soup('span')
+total = 0
 for tag in tags:
-    # Look at the parts of a tag
-    print('TAG:', tag)
-    print('URL:', tag.get('href', None))
-    print('Contents:', tag.contents[0])
-    print('Attrs:', tag.attrs)
+    x = str(tag)
+    y = re.findall("[0-9]+", x)
+    for num in y:
+        num = int(num)
+        total = total + num
+print(total)
