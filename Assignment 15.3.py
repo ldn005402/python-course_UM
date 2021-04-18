@@ -15,11 +15,10 @@ for line in fh:
     if not line.startswith('From: '):
         continue
     pieces = line.split()
-    email = pieces[-1]
-    words = email.split(".")
-    org = pieces[3]
-    row = cur.fetchone()
+    email = pieces[1]
+    org = email.split('@')[1]
     cur.execute('SELECT count FROM Counts WHERE org = ? ', (org,))
+    row = cur.fetchone()
     if row is None:
         cur.execute('''INSERT INTO Counts (org, count)
                 VALUES (?, 1)''', (org,))
